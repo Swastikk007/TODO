@@ -29,19 +29,20 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-
-        user = user_credentials.query.filter_by(username=username, password=password).first()
-        if user:
-            session('user') = username
-            flash('login successful', 'success')
-        else:
-            flash('invalid credentials!! if you are new first register' ,'danger')
-            return redirect(url_for('auth.login'))    
+        
+        if username and password:
+            user = user_credentials.query.filter_by(username=username, password=password).first()
+            if user:
+                session('user') = username
+                flash('login successful', 'success')
+            else:
+                flash('invalid credentials!! if you are new first register' ,'danger')
+                return redirect(url_for('auth.login'))    
     return render_template('login.html')
 
 @auth_bp.route('/logout', methods =['GET', 'POST'])
 def logout():
     session.pop('username', None)
     flash('loggedout successfully', 'success')
-    return redirect(url_for('auth.login'))        
+    return redirect(url_for('auth.login'))            
 
